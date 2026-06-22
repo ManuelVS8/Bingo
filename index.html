@@ -239,13 +239,11 @@ function startVocabGame() {
   C.vocabText = $('vocabWords').value;
   $('vocabBadge').style.display = 'inline-flex';
   
-  // Hide Vocab setup, show Bingo game view
   $('pVocab').classList.add('hidden');
   $('pVocab').classList.remove('flex');
   $('pBingo').classList.remove('hidden');
   $('pBingo').classList.add('flex');
   
-  // Highlight Vocab tab instead of Bingo tab
   ['tabB','tabW','tabC','tabV'].forEach(id=>$(id).classList.remove('tab-active'));
   $('tabV').classList.add('tab-active');
   
@@ -488,12 +486,12 @@ function genPDF(){
       pool=ext;
     }
   }
-  let h=`<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>${title}</title><style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:Arial,Helvetica,sans-serif;padding:12px;color:#1a1a1a}.cards-grid{display:grid;grid-template-columns:repeat(${layoutCols},1fr);gap:20px}.bingo-card{border:2px dashed #cbd5e1;border-radius:10px;padding:10px;text-align:center;background:#fff;page-break-inside:avoid;break-inside:avoid}.card-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:#888;margin-bottom:6px}.cell-grid{display:grid;grid-template-columns:repeat(${cols},1fr);gap:2px}.cell{border:2px solid #333;display:flex;align-items:center;justify-content:center;font-weight:800;color:#1a1a1a;overflow:hidden;padding:2px;line-height:1.1;min-height:0;border-radius:2px;aspect-ratio:1.45;font-size:${baseFont}px}${isTh?'.cell.s{font-size:'+baseFont+'px}.cell.m{font-size:'+Math.max(5,baseFont-2)+'px}.cell.l{font-size:'+Math.max(4,baseFont-4)+'px;letter-spacing:-.3px}.cell.xl{font-size:'+Math.max(3,baseFont-6)+'px;letter-spacing:-.4px}':''}@media print{body{padding:8px}.cards-grid{gap:14px}.bingo-card{padding:6px;border-color:#d0d0d0}}</style></head><body><div class="cards-grid">`;
+  let h=`<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>${title}</title><style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:Arial,Helvetica,sans-serif;padding:12px;color:#1a1a1a}.cards-grid{display:grid;grid-template-columns:repeat(${layoutCols},1fr);gap:20px}.bingo-card{border:2px dashed #cbd5e1;border-radius:10px;padding:10px;text-align:center;background:#fff;page-break-inside:avoid;break-inside:avoid}.card-logo{max-width:50px;height:auto;margin:0 auto 8px;display:block}.card-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:#888;margin-bottom:6px}.cell-grid{display:grid;grid-template-columns:repeat(${cols},1fr);gap:2px}.cell{border:2px solid #333;display:flex;align-items:center;justify-content:center;font-weight:800;color:#1a1a1a;overflow:hidden;padding:2px;line-height:1.1;min-height:0;border-radius:2px;aspect-ratio:1.45;font-size:${baseFont}px}${isTh?'.cell.s{font-size:'+baseFont+'px}.cell.m{font-size:'+Math.max(5,baseFont-2)+'px}.cell.l{font-size:'+Math.max(4,baseFont-4)+'px;letter-spacing:-.3px}.cell.xl{font-size:'+Math.max(3,baseFont-6)+'px;letter-spacing:-.4px}':''}@media print{body{padding:8px}.cards-grid{gap:14px}.bingo-card{padding:6px;border-color:#d0d0d0}}</style></head><body><div class="cards-grid">`;
   for(let c=0;c<cardCount;c++){
     const cp=[...pool];
     for(let i=cp.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[cp[i],cp[j]]=[cp[j],cp[i]];}
     const items=cp.slice(0,cells);
-    h+=`<div class="bingo-card"><div class="card-label">${title} #${c+1}</div><div class="cell-grid">`;
+    h+=`<div class="bingo-card"><img src="https://raw.githubusercontent.com/ManuelVS8/Bingo/refs/heads/main/Bingo.png" class="card-logo"><div class="card-label">${title} #${c+1}</div><div class="cell-grid">`;
     for(let r=0;r<rows;r++){
       for(let cl=0;cl<cols;cl++){
         const it=items[r*cols+cl];let cls='cell';
