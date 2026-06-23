@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <meta name="google" content="notranslate">
 <link rel="icon" href="https://raw.githubusercontent.com/ManuelVS8/Bingo/refs/heads/main/Bingo.ico" type="image/x-icon">
-<title>Bingo Teacher Javier</title>
+<title>Bingo Teacher Javier - Pro</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -78,7 +78,7 @@ header{background:var(--header-bg);border-bottom:1px solid var(--border);transit
 .prev-grid{display:grid;gap:2px}
 .prev-cell{border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--text);font-size:11px;background:var(--prev-cell);aspect-ratio:1.45;overflow:hidden;padding:1px;line-height:1.1;border-radius:2px}
 .prev-cell.long{font-size:9px;letter-spacing:-.3px}.prev-cell.xlong{font-size:7px;letter-spacing:-.3px}
-.word-mode-badge{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:20px;background:rgba(245,158,66,.12);border:1px solid rgba(245,158,66,.3);font-size:11px;font-weight:700;color:var(--orange)}
+.word-mode-badge{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:20px;background:rgba(245,158,66,.12);border:1px solid rgba(245,158,66,.3);font-size:11px;font-weight:700;color:var(--orange);cursor:pointer}
 .num-display-word{font-size:4rem!important;line-height:1.1!important}
 @media(max-width:640px){.lang-btn{width:28px;height:24px;font-size:14px}.mute-btn{width:30px;height:30px}.num-display-word{font-size:2.8rem!important}}
 @media(max-width:400px){.num-display-word{font-size:2.2rem!important}}
@@ -91,7 +91,7 @@ header{background:var(--header-bg);border-bottom:1px solid var(--border);transit
 <header class="flex items-center justify-between px-4 sm:px-6 py-3 flex-shrink-0">
   <div class="flex items-center gap-2">
     <h1 class="text-lg sm:text-xl font-extrabold tracking-tight" style="color:var(--text)" data-i18n="title">Bingo Teacher Javier</h1>
-    <span id="vocabBadge" class="word-mode-badge" style="display:none;cursor:pointer" onclick="goTab('vocab')"><i class="fas fa-spell-check"></i> VOCAB</span>
+    <span id="vocabBadge" class="word-mode-badge" style="display:none" onclick="goTab('vocab')"><i class="fas fa-spell-check"></i> VOCAB</span>
   </div>
   <div class="flex gap-1.5 sm:gap-2 items-center flex-wrap justify-end">
     <button onclick="goTab('bingo')" id="tabB" class="tab-active px-3 py-2 rounded-lg text-sm font-semibold transition-all" style="color:var(--text2)"><i class="fas fa-dice mr-1"></i><span class="hidden sm:inline" data-i18n="tabBingo">Bingo</span></button>
@@ -181,24 +181,32 @@ header{background:var(--header-bg);border-bottom:1px solid var(--border);transit
 <audio id="victoryAudio" preload="auto" src="https://raw.githubusercontent.com/ManuelVS8/Efectos_audio/refs/heads/main/Termin%C3%A9.mp3"></audio>
 
 <script>
-const I18N={en:{title:'Bingo Teacher Javier',subtitle:'Interactive English Bingo & Listening Game',tabBingo:'Bingo',tabRoulette:'Roulette',tabCards:'Cards',tabVocab:'Vocab',startGame:'START GAME',pressNext:'Press NEXT NUMBER to start',pressNextWord:'Press NEXT WORD to start',numbersLeft:'numbers left',wordsLeft:'words left',nextNumber:'NEXT NUMBER',nextWord:'NEXT WORD',noNumbers:'No numbers called yet',noWords:'No words called yet',repeat:'Repeat',rouletteTitle:'Random Student Roulette',studentPlaceholder:'Type student name and press Enter',add:'Add',spin:'SPIN',clearAll:'Clear All',cardGenTitle:'Bingo Card Generator',rows:'Rows',cols:'Columns',cells:'cells per card',cardTitle:'Card Title',cardTitlePh:'e.g. Animals Bingo',numCards:'Number of cards',minimum:'Minimum',maximum:'Maximum',thematicBingo:'Thematic Bingo',thematicDesc:'Use vocabulary words instead of numbers',wordsPlaceholder:'Paste one word per line:\ndog\ncat\nelephant\nlion...',genDownload:'Generate & Download PDF',preview:'Preview',settings:'Settings',darkMode:'Dark Mode',numberRange:'Number Range',rangeWarning:'Changing range resets the current game.',pronunciation:'Pronunciation',accent:'Accent',speed:'Speed',doubleReading:'Double Reading',dblNumDesc:'Numbers: "Forty-five... four... five"',dblWordDesc:'Words: "Elephant... E-L-E-P-H-A-N-T"',autoMode:'Auto Mode',interval:'Interval',effects:'Effects',spinAnim:'Spin Animation',soundFx:'Sound Effects',listeningChallenge:'Listening Challenge',enable:'Enable',revealAfter:'Reveal after',listeningDesc:'Number or word stays hidden. Students listen and guess before it appears.',vocabMode:'Vocabulary Mode',resetGame:'Reset Game',calledNumbers:'Called Numbers',continue:'Continue',allCalled:'All numbers called!',allWords:'All words called!',rangeUpdated:'Range updated:',autoMsg:'Auto mode: every',gameReset:'Game reset',alreadyAdded:'Already added',disabled:'Disabled',wordsNeeded:'words needed, you have',wordsWillRepeat:'Some words will repeat to fill the grid.',enoughWords:'Words OK',typeWords:'Type vocabulary words to play',noVocab:'No vocabulary words loaded',typeAtLeast:'Type at least',words:'words'},es:{title:'Bingo Teacher Javier',subtitle:'Bingo Interactivo de Inglés y Juego de Escucha',tabBingo:'Bingo',tabRoulette:'Ruleta',tabCards:'Cartones',tabVocab:'Vocab',startGame:'EMPEZAR JUEGO',pressNext:'Pulsa SIGUIENTE NÚMERO para empezar',pressNextWord:'Pulsa SIGUIENTE PALABRA para empezar',numbersLeft:'números restantes',wordsLeft:'palabras restantes',nextNumber:'SIGUIENTE NÚMERO',nextWord:'SIGUIENTE PALABRA',noNumbers:'Aún no se ha llamado ningún número',noWords:'Aún no se ha llamado ninguna palabra',repeat:'Repetir',rouletteTitle:'Ruleta de Alumnos Aleatoria',studentPlaceholder:'Escribe el nombre y pulsa Enter',add:'Añadir',spin:'GIRAR',clearAll:'Borrar Todo',cardGenTitle:'Generador de Cartones de Bingo',rows:'Filas',cols:'Columnas',cells:'celdas por cartón',cardTitle:'Título del Cartón',cardTitlePh:'Ej. Bingo de Animales',numCards:'Número de cartones',minimum:'Mínimo',maximum:'Máximo',thematicBingo:'Bingo Temático',thematicDesc:'Usar vocabulario en lugar de números',wordsPlaceholder:'Pega una palabra por línea:\ndog\ncat\nelephant\nlion...',genDownload:'Generar y Descargar PDF',preview:'Vista Previa',settings:'Configuración',darkMode:'Modo Oscuro',numberRange:'Rango de Números',rangeWarning:'Cambiar el rango reinicia la partida actual.',pronunciation:'Pronunciación',accent:'Acento',speed:'Velocidad',doubleReading:'Lectura Doble',dblNumDesc:'Números: "Cuarenta y cinco... cuatro... cinco"',dblWordDesc:'Palabras: "Elephant... E-L-E-P-H-A-N-T"',autoMode:'Modo Automático',interval:'Intervalo',effects:'Efectos',spinAnim:'Animación de Giro',soundFx:'Efectos de Sonido',listeningChallenge:'Reto de Escucha',enable:'Activar',revealAfter:'Revelar tras',listeningDesc:'El número o palabra permanece oculto. Los alumnos escuchan y adivinan antes de que aparezca.',vocabMode:'Modo Vocabulario',resetGame:'Reiniciar Partida',calledNumbers:'Números Llamados',continue:'Continuar',allCalled:'¡Todos los números han sido llamados!',allWords:'¡Todas las palabras han sido llamadas!',rangeUpdated:'Rango actualizado:',autoMsg:'Modo automático: cada',gameReset:'Partida reiniciada',alreadyAdded:'Ya añadido',disabled:'Desactivado',wordsNeeded:'palabras necesarias, tienes',wordsWillRepeat:'Algunas palabras se repetirán.',enoughWords:'Palabras OK',typeWords:'Escribe vocabulario para jugar',noVocab:'No hay vocabulario cargado',typeAtLeast:'Escribe al menos',words:'palabras'}};
+/* ===== DICCIONARIO I18N ===== */
+const I18N={
+  en:{title:'Bingo Teacher Javier',subtitle:'Interactive English Bingo & Listening Game',tabBingo:'Bingo',tabRoulette:'Roulette',tabCards:'Cards',tabVocab:'Vocab',startGame:'START GAME',pressNext:'Press NEXT NUMBER to start',pressNextWord:'Press NEXT WORD to start',numbersLeft:'numbers left',wordsLeft:'words left',nextNumber:'NEXT NUMBER',nextWord:'NEXT WORD',noNumbers:'No numbers called yet',noWords:'No words called yet',repeat:'Repeat',rouletteTitle:'Random Student Roulette',studentPlaceholder:'Type student name and press Enter',add:'Add',spin:'SPIN',clearAll:'Clear All',cardGenTitle:'Bingo Card Generator',rows:'Rows',cols:'Columns',cells:'cells per card',cardTitle:'Card Title',cardTitlePh:'e.g. Animals Bingo',numCards:'Number of cards',minimum:'Minimum',maximum:'Maximum',thematicBingo:'Thematic Bingo',thematicDesc:'Use vocabulary words instead of numbers',wordsPlaceholder:'Paste one word per line:\ndog\ncat\nelephant\nlion...',genDownload:'Generate & Download PDF',preview:'Preview',settings:'Settings',darkMode:'Dark Mode',numberRange:'Number Range',rangeWarning:'Changing range resets the current game.',pronunciation:'Pronunciation',accent:'Accent',speed:'Speed',doubleReading:'Double Reading',dblNumDesc:'Numbers: "Forty-five... four... five"',dblWordDesc:'Words: "Elephant... E-L-E-P-H-A-N-T"',autoMode:'Auto Mode',interval:'Interval',effects:'Effects',spinAnim:'Spin Animation',soundFx:'Sound Effects',listeningChallenge:'Listening Challenge',enable:'Enable',revealAfter:'Reveal after',listeningDesc:'Number or word stays hidden. Students listen and guess before it appears.',vocabMode:'Vocabulary Mode',resetGame:'Reset Game',calledNumbers:'Called Numbers',continue:'Continue',allCalled:'All numbers called!',allWords:'All words called!',rangeUpdated:'Range updated:',autoMsg:'Auto mode: every',gameReset:'Game reset',alreadyAdded:'Already added',disabled:'Disabled',wordsNeeded:'words needed, you have',wordsWillRepeat:'Some words will repeat to fill the grid.',enoughWords:'Words OK',typeWords:'Type vocabulary words to play',noVocab:'No vocabulary words loaded',typeAtLeast:'Type at least',words:'words'},
+  es:{title:'Bingo Teacher Javier',subtitle:'Bingo Interactivo de Inglés y Juego de Escucha',tabBingo:'Bingo',tabRoulette:'Ruleta',tabCards:'Cartones',tabVocab:'Vocab',startGame:'EMPEZAR JUEGO',pressNext:'Pulsa SIGUIENTE NÚMERO para empezar',pressNextWord:'Pulsa SIGUIENTE PALABRA para empezar',numbersLeft:'números restantes',wordsLeft:'palabras restantes',nextNumber:'SIGUIENTE NÚMERO',nextWord:'SIGUIENTE PALABRA',noNumbers:'Aún no se ha llamado ningún número',noWords:'Aún no se ha llamado ninguna palabra',repeat:'Repetir',rouletteTitle:'Ruleta de Alumnos Aleatoria',studentPlaceholder:'Escribe el nombre y pulsa Enter',add:'Añadir',spin:'GIRAR',clearAll:'Borrar Todo',cardGenTitle:'Generador de Cartones de Bingo',rows:'Filas',cols:'Columnas',cells:'celdas por cartón',cardTitle:'Título del Cartón',cardTitlePh:'Ej. Bingo de Animales',numCards:'Número de cartones',minimum:'Mínimo',maximum:'Máximo',thematicBingo:'Bingo Temático',thematicDesc:'Usar vocabulario en lugar de números',wordsPlaceholder:'Pega una palabra por línea:\ndog\ncat\nelephant\nlion...',genDownload:'Generar y Descargar PDF',preview:'Vista Previa',settings:'Configuración',darkMode:'Modo Oscuro',numberRange:'Rango de Números',rangeWarning:'Cambiar el rango reinicia la partida actual.',pronunciation:'Pronunciación',accent:'Acento',speed:'Velocidad',doubleReading:'Lectura Doble',dblNumDesc:'Números: "Cuarenta y cinco... cuatro... cinco"',dblWordDesc:'Palabras: "Elephant... E-L-E-P-H-A-N-T"',autoMode:'Modo Automático',interval:'Intervalo',effects:'Efectos',spinAnim:'Animación de Giro',soundFx:'Efectos de Sonido',listeningChallenge:'Reto de Escucha',enable:'Activar',revealAfter:'Revelar tras',listeningDesc:'El número o palabra permanece oculto. Los alumnos escuchan y adivinan antes de que aparezca.',vocabMode:'Modo Vocabulario',resetGame:'Reiniciar Partida',calledNumbers:'Números Llamados',continue:'Continuar',allCalled:'¡Todos los números han sido llamados!',allWords:'¡Todas las palabras han sido llamadas!',rangeUpdated:'Rango actualizado:',autoMsg:'Modo automático: cada',gameReset:'Partida reiniciada',alreadyAdded:'Ya añadido',disabled:'Desactivado',wordsNeeded:'palabras necesarias, tienes',wordsWillRepeat:'Algunas palabras se repetirán.',enoughWords:'Palabras OK',typeWords:'Escribe vocabulario para jugar',noVocab:'No hay vocabulario cargado',typeAtLeast:'Escribe al menos',words:'palabras'}
+};
 let lang='en';function t(k){return I18N[lang][k]||I18N['en'][k]||k;}
 function applyLanguage(){document.documentElement.lang='en';document.querySelectorAll('[data-i18n]').forEach(el=>{const k=el.getAttribute('data-i18n');if(I18N[lang][k])el.textContent=I18N[lang][k];});document.querySelectorAll('[data-i18n-placeholder]').forEach(el=>{const k=el.getAttribute('data-i18n-placeholder');if(I18N[lang][k])el.placeholder=I18N[lang][k];});document.querySelectorAll('[data-i18n-opt]').forEach(el=>{const k=el.getAttribute('data-i18n-opt');if(I18N[lang][k])el.textContent=I18N[lang][k];});$('langEn').classList.toggle('active',lang==='en');$('langEs').classList.toggle('active',lang==='es');if(!called.length&&!vocabCalled.length)$('numT').textContent=vocabActive?t('pressNextWord'):t('pressNext');if(called.length||vocabCalled.length)upHC();const o=$('cfgAuto').options[0];if(o)o.textContent=t('disabled');}
 function setLang(l){lang=l;speechSynthesis.cancel();applyLanguage();saveCfg();}
 
+/* ===== CONVERSIÓN NÚMERO → INGLÉS ===== */
 const ON=['','one','two','three','four','five','six','seven','eight','nine','ten','eleven','twelve','thirteen','fourteen','fifteen','sixteen','seventeen','eighteen','nineteen'];
 const TN=['','','twenty','thirty','forty','fifty','sixty','seventy','eighty','ninety'];
 function n2e(n){if(n<1||n>999||!Number.isInteger(n))return String(n);if(n<20)return ON[n];if(n<100){const t=Math.floor(n/10),o=n%10;return o?TN[t]+'-'+ON[o]:TN[t];}const h=Math.floor(n/100),r=n%100;if(!r)return ON[h]+' hundred';if(r<20)return ON[h]+' hundred and '+ON[r];const t=Math.floor(r/10),o=r%10;return ON[h]+' hundred and '+(o?TN[t]+'-'+ON[o]:TN[t]);}
 function n2d(n){return String(n).split('').map(d=>ON[+d]).filter(Boolean).join('... ');}
 function wordToSpelling(w){return w.toUpperCase().split('').join('... ');}
 
+/* ===== ESTADO Y CONFIGURACIÓN ===== */
 const DEF={min:1,max:75,acc:'en-GB',spd:0.9,dbl:false,auto:0,ani:true,snd:true,lis:false,del:5,dark:false,muted:false,lang:'en',vocabText:''};
 let C={...DEF};let called=[],remaining=[],cur=null,spinning=false,autoT=null;
 let aCtx=null,voices=[],bVoice=null,audioUnlocked=false;
 let students=[],wAngle=0,wSpin=false,victoryAudio=null;
 let vocabActive=false, vocabPool=[], vocabCalled=[];
+let cardThematicOn=false;
 const $=id=>document.getElementById(id);
 
+/* ===== AUDIO Y SÍNTESIS DE VOZ ===== */
 function unlockAudioContext(){if(audioUnlocked)return;try{if(!aCtx)aCtx=new(window.AudioContext||window.webkitAudioContext)();if(aCtx.state==='suspended')aCtx.resume();const buf=aCtx.createBuffer(1,aCtx.sampleRate*0.05,aCtx.sampleRate);const src=aCtx.createBufferSource();src.buffer=buf;src.connect(aCtx.destination);src.start();audioUnlocked=true;}catch(e){}}
 function forceInitTTS(){if(speechSynthesis.getVoices().length>0)return;const u=new SpeechSynthesisUtterance('');u.volume=0;speechSynthesis.speak(u);}
 function playVictory(){if(C.muted||!C.snd)return;try{if(!victoryAudio)victoryAudio=$('victoryAudio');victoryAudio.currentTime=0;victoryAudio.play().catch(()=>{});}catch(e){}}
@@ -218,17 +226,19 @@ function spkNum(n,cb){spk(C.dbl?n2e(n)+'... '+n2d(n):n2e(n),cb);}
 function spkWord(w,cb){spk(C.dbl?w+'... '+wordToSpelling(w):w,cb);}
 if(speechSynthesis.onvoiceschanged!==undefined)speechSynthesis.onvoiceschanged=ldV;ldV();setTimeout(ldV,500);setTimeout(ldV,1500);
 
+/* ===== UTILIDADES Y CONFIG ===== */
 function toggleDark(){C.dark=$('cfgDark').checked;document.body.classList.toggle('dark-mode',C.dark);saveCfg();}
 function saveCfg(){try{localStorage.setItem('btj7',JSON.stringify(C));}catch(e){}}
 function loadCfg(){try{const s=localStorage.getItem('btj7');if(s)C={...DEF,...JSON.parse(s)};}catch(e){}}
-
 function safeUnlock(){spinning=false;$('nextBtn').disabled=!remaining.length;}
 
+/* ===== VOCABULARIO (Sincronizado con Cards) ===== */
 function parseVocab(text){return text.trim().split('\n').map(w=>w.trim()).filter(w=>w.length>0);}
 function loadVocabPool(){
-  vocabPool = [...parseVocab($('vocabWords').value)];
+  vocabPool = [...parseVocab(C.vocabText)];
   vocabCalled = [];
   remaining = [...vocabPool];
+  // Shuffle remaining
   for(let i=remaining.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[remaining[i],remaining[j]]=[remaining[j],remaining[i]];}
 }
 
@@ -239,10 +249,8 @@ function startVocabGame() {
   C.vocabText = $('vocabWords').value;
   $('vocabBadge').style.display = 'inline-flex';
   
-  $('pVocab').classList.add('hidden');
-  $('pVocab').classList.remove('flex');
-  $('pBingo').classList.remove('hidden');
-  $('pBingo').classList.add('flex');
+  $('pVocab').classList.add('hidden');$('pVocab').classList.remove('flex');
+  $('pBingo').classList.remove('hidden');$('pBingo').classList.add('flex');
   
   ['tabB','tabW','tabC','tabV'].forEach(id=>$(id).classList.remove('tab-active'));
   $('tabV').classList.add('tab-active');
@@ -261,22 +269,26 @@ function checkVocabWords() {
   }
 }
 
- $('vocabWords').addEventListener('input', () => {
-  C.vocabText = $('vocabWords').value;
-  $('cardThemWords').value = C.vocabText;
+function setVocabText(text) {
+  C.vocabText = text;
+  $('vocabWords').value = text;
+  $('cardThemWords').value = text;
   checkVocabWords();
   if (cardThematicOn) {
     updateCardThemInfo();
     updatePreview();
   }
-});
+}
+ $('vocabWords').addEventListener('input', () => setVocabText($('vocabWords').value));
+ $('cardThemWords').addEventListener('input', () => setVocabText($('cardThemWords').value));
 
+/* ===== LÓGICA DEL JUEGO ===== */
 function initGame(){
-  spinning=false;called=[];cur=null;stopAuto();
+  spinning=false;called=[];vocabCalled=[];cur=null;stopAuto();
   if(vocabActive){
     loadVocabPool();
   }else{
-    remaining=[];vocabCalled=[];
+    remaining=[];
     for(let i=C.min;i<=C.max;i++)remaining.push(i);
     for(let i=remaining.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[remaining[i],remaining[j]]=[remaining[j],remaining[i]];}
   }
@@ -285,6 +297,7 @@ function initGame(){
   $('remLabel').textContent=vocabActive?t('wordsLeft'):t('numbersLeft');
   upUI();
 }
+
 function upUI(){
   $('remC').textContent=remaining.length;
   $('nextBtn').disabled=remaining.length===0||spinning;
@@ -306,13 +319,24 @@ function nextNumber(){
   if(C.lis){$('numD').style.color='transparent';$('numD').style.filter='blur(20px)';}else{$('numD').style.color=C.dark?'rgba(255,255,255,.6)':'rgba(26,26,26,.35)';}
   const uA=C.ani,dur=2000,st=performance.now();let lTk=0,lN=-1;
   if(uA)$('numD').classList.add('spin-a');
-  function fr(now){if(!spinning)return;const p=Math.min((now-st)/dur,1);if(p<1){const iv=40+p*p*400;if(now-lTk>iv){let r;do{r=remaining[Math.floor(Math.random()*remaining.length)];}while(r===lN);lN=r;$('numD').textContent=r;lTk=now;if(uA)sTick();}requestAnimationFrame(fr);}else fin();}
+  function fr(now){
+    if(!spinning)return;
+    const p=Math.min((now-st)/dur,1);
+    if(p<1){
+      const iv=40+p*p*400;
+      if(now-lTk>iv){
+        let r;
+        do{r=remaining[Math.floor(Math.random()*remaining.length)];}while(r===lN);
+        lN=r;$('numD').textContent=r;lTk=now;if(uA)sTick();
+      }
+      requestAnimationFrame(fr);
+    } else fin();
+  }
   function fin(){
     if(!spinning){safeUnlock();return;}
     const idx=remaining.length>1?Math.floor(Math.random()*remaining.length):0;
     const item=remaining.splice(idx,1)[0];cur=item;
-    if(vocabActive){vocabCalled.push(item);}
-    else{called.push(item);}
+    if(vocabActive){vocabCalled.push(item);} else {called.push(item);}
     $('numD').classList.remove('spin-a');$('numD').style.filter='none';
     if(uA){$('numD').classList.add('rev-a');sRev();}
     const isWord=vocabActive;
@@ -327,7 +351,14 @@ function nextNumber(){
       $('numD').style.color='var(--listen-num)';$('numD').style.filter='blur(18px)';
       $('numT').textContent='? ? ?';$('numT').style.color='var(--listen-t)';$('lDots').style.opacity='1';
       const speakFn=isWord?()=>spkWord(item):()=>spkNum(item);
-      speakFn(()=>{if(!spinning){safeUnlock();return;}const tm=setTimeout(()=>{if(!spinning)return;$('numD').style.color='var(--num-c)';$('numD').style.filter='none';$('numD').classList.add('rev-a');$('numT').textContent=displayText;$('numT').style.color='var(--num-c)';$('lDots').style.opacity='0';spinning=false;},C.del*1000);fin._timer=tm;});
+      speakFn(()=>{
+        if(!spinning){safeUnlock();return;}
+        const tm=setTimeout(()=>{
+          if(!spinning)return;
+          $('numD').style.color='var(--num-c)';$('numD').style.filter='none';$('numD').classList.add('rev-a');
+          $('numT').textContent=displayText;$('numT').style.color='var(--num-c)';$('lDots').style.opacity='0';spinning=false;
+        },C.del*1000);fin._timer=tm;
+      });
     }else{
       $('numT').textContent=displayText;$('numT').style.color='var(--num-c)';$('numT').style.fontStyle='normal';
       isWord?spkWord(item):spkNum(item);spinning=false;
@@ -342,7 +373,14 @@ function doRepeat(){if(cur===null)return;speechSynthesis.cancel();sClk();vocabAc
 
 function upHC(){const list=vocabActive?vocabCalled:called;const r=list.slice(-20).reverse();$('hChips').innerHTML=r.map((item,i)=>`<button onclick="rpItem(${i})" class="flex-shrink-0 px-3 py-1 rounded-lg text-sm font-bold transition-all hover:opacity-80" style="background:${i===0?'var(--orange)':'var(--chip-bg)'};color:${i===0?'#fff':'var(--chip-t)'}" title="${vocabActive?item:n2e(item)}">${item}</button>`).join('');}
 function upHG(){const list=vocabActive?vocabCalled:called;$('hGrid').innerHTML=list.map((item,i)=>`<button onclick="rpItem(${i})" class="px-4 py-2 rounded-lg border-2 transition-all text-center hover:border-orange-400" style="border-color:var(--border)"><div class="text-xl font-extrabold" style="color:var(--text)">${item}</div><div class="text-[11px] font-medium" style="color:var(--text3)">${vocabActive?item:n2e(item)}</div></button>`).join('');}
-function rpItem(i){const list=vocabActive?vocabCalled:called;const item=list[i];sClk();if(vocabActive&&String(item).length>8){$('numD').className='text-4xl sm:text-5xl lg:text-7xl font-black relative z-10 transition-all duration-300 select-none';}else if(vocabActive&&String(item).length>5){$('numD').className='text-5xl sm:text-6xl lg:text-8xl font-black relative z-10 transition-all duration-300 select-none';}else{$('numD').className='text-6xl sm:text-7xl lg:text-9xl font-black relative z-10 transition-all duration-300 select-none';}$('numD').textContent=item;$('numD').style.color='var(--num-c)';$('numD').style.filter='none';$('numT').textContent=vocabActive?item:n2e(item);$('numT').style.color='var(--num-c)';$('numT').style.fontStyle='normal';$('numCircle').style.borderColor='var(--orange)';$('numCircle').classList.add('glow-a');$('numGlow').style.background='radial-gradient(circle,var(--glow-c),transparent 70%)';$('repeatBtn').disabled=false;vocabActive?spkWord(item):spkNum(item);}
+function rpItem(i){
+  const list=vocabActive?vocabCalled:called;const item=list[i];sClk();
+  if(vocabActive&&String(item).length>8){$('numD').className='text-4xl sm:text-5xl lg:text-7xl font-black relative z-10 transition-all duration-300 select-none';}
+  else if(vocabActive&&String(item).length>5){$('numD').className='text-5xl sm:text-6xl lg:text-8xl font-black relative z-10 transition-all duration-300 select-none';}
+  else{$('numD').className='text-6xl sm:text-7xl lg:text-9xl font-black relative z-10 transition-all duration-300 select-none';}
+  $('numD').textContent=item;$('numD').style.color='var(--num-c)';$('numD').style.filter='none';$('numT').textContent=vocabActive?item:n2e(item);$('numT').style.color='var(--num-c)';$('numT').style.fontStyle='normal';
+  $('numCircle').style.borderColor='var(--orange)';$('numCircle').classList.add('glow-a');$('numGlow').style.background='radial-gradient(circle,var(--glow-c),transparent 70%)';$('repeatBtn').disabled=false;vocabActive?spkWord(item):spkNum(item);
+}
 function openHist(){$('histOv').classList.add('active');}function closeHist(){$('histOv').classList.remove('active');}
 
 function triggerBingo(){speechSynthesis.cancel();sBing();playVictory();const total=vocabActive?vocabCalled.length:called.length;$('bingInfo').textContent=total+' '+(vocabActive?t('wordsLeft'):t('numbersLeft')).toLowerCase();$('bingOv').classList.add('active');const cols=['#f59e42','#ff6b6b','#4ecdc4','#45b7d1','#96e6a1','#dda0dd','#f7dc6f'];for(let i=0;i<80;i++){const e=document.createElement('div');e.className='conf-p';e.style.left=Math.random()*100+'vw';e.style.background=cols[Math.floor(Math.random()*cols.length)];e.style.width=(Math.random()*8+6)+'px';e.style.height=(Math.random()*8+6)+'px';e.style.borderRadius=Math.random()>0.5?'50%':'2px';e.style.animationDuration=(Math.random()*2+2)+'s';e.style.animationDelay=(Math.random()*0.5)+'s';document.body.appendChild(e);setTimeout(()=>e.remove(),5000);}}
@@ -359,17 +397,14 @@ function apCfg(){const nM=parseInt($('cfgMin').value)||1,nX=parseInt($('cfgMax')
 function popCfg(){$('cfgMin').value=C.min;$('cfgMax').value=C.max;$('cfgAcc').value=C.acc;$('cfgSpd').value=C.spd;$('spdV').textContent=C.spd+'x';$('cfgDbl').checked=C.dbl;$('cfgAuto').value=C.auto;$('cfgAni').checked=C.ani;$('cfgSnd').checked=C.snd;$('cfgLis').checked=C.lis;$('cfgDel').value=C.del;$('cfgDark').checked=C.dark;$('muteBtn').classList.toggle('muted',C.muted);if(C.muted)$('muteIcon').innerHTML='<line x1="1" y1="1" x2="23" y2="23" stroke="currentColor" stroke-width="2.2"/><line x1="23" y1="1" x2="1" y2="23" stroke="currentColor" stroke-width="2.2"/><circle cx="6" cy="6" r="3" fill="currentColor" stroke="none"/><circle cx="18" cy="18" r="3" fill="currentColor" stroke="none"/>';$('nextBtn').textContent=vocabActive?t('nextWord'):t('nextNumber');$('remLabel').textContent=vocabActive?t('wordsLeft'):t('numbersLeft');}
 function resetGame(){apCfg();vocabActive=false;$('vocabBadge').style.display='none';initGame();closeSettings();toast(t('gameReset'));}
 
+/* ===== NAVEGACIÓN DE PESTAÑAS ===== */
 function goTab(tab){
   sClk();
   ['pBingo','pWheel','pCards','pVocab'].forEach(id=>{$(id).classList.add('hidden');$(id).classList.remove('flex');});
   ['tabB','tabW','tabC','tabV'].forEach(id=>$(id).classList.remove('tab-active'));
   if(tab==='bingo'){
     $('pBingo').classList.remove('hidden');$('pBingo').classList.add('flex');$('tabB').classList.add('tab-active');
-    if(vocabActive) {
-      vocabActive = false;
-      $('vocabBadge').style.display = 'none';
-      initGame();
-    }
+    if(vocabActive) { vocabActive = false; $('vocabBadge').style.display = 'none'; initGame(); }
   } else if(tab==='wheel'){
     $('pWheel').classList.remove('hidden');$('pWheel').classList.add('flex');$('tabW').classList.add('tab-active');drawW();
   } else if(tab==='cards'){
@@ -383,6 +418,7 @@ function goTab(tab){
   }
 }
 
+/* ===== RULETA ===== */
 function addStudent(){const i=$('sInp'),n=i.value.trim();if(!n)return;if(students.includes(n)){toast(t('alreadyAdded'));return;}students.push(n);i.value='';rStu();drawW();}
 function rmStu(i){students.splice(i,1);rStu();drawW();}
 function clearStu(){students=[];rStu();drawW();$('wRes').textContent='';}
@@ -391,7 +427,7 @@ const WC2=['#f59e42','#ef4444','#3b82f6','#10b981','#8b5cf6','#ec4899','#14b8a6'
 function drawW(){const cv=$('wCan'),cx=cv.getContext('2d'),cX=cv.width/2,cY=cv.height/2,r=cX-10;cx.clearRect(0,0,cv.width,cv.height);if(students.length<2){cx.fillStyle=C.dark?'#4e6080':'#a0a0a0';cx.font='500 16px Outfit';cx.textAlign='center';cx.fillText(students.length===0?'':'Add at least 2 students',cX,cY);return;}const sa=Math.PI*2/students.length;students.forEach((nm,i)=>{const a0=wAngle+i*sa;cx.beginPath();cx.moveTo(cX,cY);cx.arc(cX,cY,r,a0,a0+sa);cx.closePath();cx.fillStyle=WC2[i%WC2.length];cx.fill();cx.strokeStyle='#fff';cx.lineWidth=2;cx.stroke();cx.save();cx.translate(cX,cY);cx.rotate(a0+sa/2);cx.fillStyle='#fff';cx.font='bold '+Math.min(14,200/students.length)+'px Outfit';cx.textAlign='right';cx.textBaseline='middle';let dn=nm.length>12?nm.slice(0,11)+'…':nm;cx.fillText(dn,r-10,0);cx.restore();});cx.beginPath();cx.arc(cX,cY,20,0,Math.PI*2);cx.fillStyle='#fff';cx.fill();cx.beginPath();cx.arc(cX,cY,14,0,Math.PI*2);cx.fillStyle='#f59e42';cx.fill();}
 function spinWheel(){if(wSpin||students.length<2)return;wSpin=true;$('spinBtn').disabled=true;$('wRes').textContent='';const tot=Math.PI*2*(5+Math.random()*5),sA=wAngle,dur=4500,sT=performance.now();let ls=-1;function an(now){const p=Math.min((now-sT)/dur,1),e=1-Math.pow(1-p,3);wAngle=sA+tot*e;drawW();const sa=Math.PI*2/students.length,sg=Math.floor(wAngle/sa);if(sg!==ls){ls=sg;playWheelTick();}if(p<1)requestAnimationFrame(an);else{wSpin=false;$('spinBtn').disabled=false;const sa2=Math.PI*2/students.length,nA=((-wAngle%(Math.PI*2))+(Math.PI*2))%(Math.PI*2),wi=Math.floor(nA/sa2)%students.length;$('wRes').textContent=students[wi]+'!';$('wRes').style.color=WC2[wi%WC2.length];playWheelReveal();}}requestAnimationFrame(an);}
 
-let cardThematicOn=false;
+/* ===== TARJETAS Y PDF ===== */
 function toggleCardThematic(){
   cardThematicOn=!cardThematicOn;
   $('cardThemTog').classList.toggle('active',cardThematicOn);
@@ -446,17 +482,9 @@ function updatePreview(){
   h+='</div></div>';
   $('previewArea').innerHTML=h;
 }
-
  $('cTitle').addEventListener('input',updatePreview);
  $('cMin').addEventListener('input',updatePreview);
  $('cMax').addEventListener('input',updatePreview);
- $('cardThemWords').addEventListener('input',()=>{
-  C.vocabText = $('cardThemWords').value;
-  $('vocabWords').value = C.vocabText;
-  checkVocabWords();
-  updateCardThemInfo();
-  updatePreview();
-});
 
 function genPDF(){
   const rows=getCardRows(),cols=getCardCols(),cells=rows*cols;const cardCount=Math.min(Math.max(1,parseInt($('cCnt').value)||30),100);
@@ -501,11 +529,12 @@ function genPDF(){
     }
     h+=`</div></div>`;
   }
-  h+=`</div><script>window.onload=function(){window.print();}<\/script></body></html>`;
+  h+=`</div><script>window.onload=function(){window.print();}<\\/script></body></html>`;
   const pw=window.open('','_blank');
   if(pw){pw.document.write(h);pw.document.close();}else{toast(lang==='es'?'Ventana bloqueada':'Pop-up blocked. Please allow pop-ups.');}
 }
 
+/* ===== TOASTS Y EVENTOS ===== */
 function toast(msg){const t=document.createElement('div');t.className='toast';t.textContent=msg;$('tBox').appendChild(t);requestAnimationFrame(()=>t.classList.add('show'));setTimeout(()=>{t.classList.remove('show');setTimeout(()=>t.remove(),400);},3000);}
 
 document.addEventListener('keydown',e=>{
@@ -519,6 +548,7 @@ document.addEventListener('keydown',e=>{
 document.addEventListener('click',function fc(){unlockAudioContext();forceInitTTS();document.removeEventListener('click',fc);},{once:true});
 document.addEventListener('touchstart',function ft(){unlockAudioContext();forceInitTTS();document.removeEventListener('touchstart',ft);},{once:true});
 
+/* ===== INICIALIZACIÓN ===== */
 loadCfg();popCfg();if(C.dark)document.body.classList.add('dark-mode');
 lang=C.lang||'en';initGame();rStu();drawW();updatePreview();
 if(typeof fin==='undefined')window.fin={_timer:null};else fin._timer=null;
