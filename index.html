@@ -118,7 +118,7 @@ header{background:var(--header-bg);border-bottom:1px solid var(--border);transit
 /* Wheel pointer (D) */
 #wheelPointer{filter:drop-shadow(0 3px 8px rgba(245,158,66,.5))}
 .wheel-spinning #wheelPointer{animation:pointerVib .08s ease-in-out infinite alternate}
-@keyframes pointerVib{from{transform:translateX(-50%) rotate(-8deg) translateY(2px)}to{transform:translateX(-50%) rotate(8deg) translateY(0)}
+@keyframes pointerVib{from{transform:translateX(-50%) rotate(-8deg) translateY(2px)}to{transform:translateX(-50%) rotate(8deg) translateY(0)}}
 
 /* Vocab setup dentro de bingo */
 #vocabSetupInline{transition:all .3s}
@@ -654,9 +654,9 @@ function toggleFS(){if(!document.fullscreenElement)document.documentElement.requ
 /* ===== CONFIG ===== */
 function openSettings(){sClk();$('sPn').classList.add('open');$('sOv').classList.add('open');}
 function closeSettings(){
-  speechSynthesis.cancel();
-  if(fin._timer){clearTimeout(fin._timer);fin._timer=null;}
-  spinning=false;apCfg();
+  try{if(typeof fin!=='undefined'&&fin._timer){clearTimeout(fin._timer);fin._timer=null;}}catch(e){}
+  spinning=false;
+  try{apCfg();}catch(e){}
   $('sPn').classList.remove('open');$('sOv').classList.remove('open');
 }
 function apCfg(){
