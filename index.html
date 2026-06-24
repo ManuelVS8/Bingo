@@ -91,8 +91,8 @@ header{background:var(--header-bg);border-bottom:1px solid var(--border);transit
 /* Progress ring (B) */
 #progressRingCircle{transform:rotate(-90deg);transform-origin:150px 150px;transition:stroke-dashoffset .7s cubic-bezier(.22,1,.36,1)}
 
-/* Chips scroll (H) */
-.chips-scroll{display:flex;gap:8px;overflow-x:auto;padding:4px 2px;scrollbar-width:none;flex-direction:row-reverse;scroll-behavior:smooth}
+/* Chips scroll móvil (H) — el más reciente SIEMPRE a la izquierda */
+.chips-scroll{display:flex;gap:8px;overflow-x:auto;padding:4px 2px;scrollbar-width:none;flex-direction:row;scroll-behavior:smooth}
 .chips-scroll::-webkit-scrollbar{display:none}
 .chip-item{flex-shrink:0;padding:6px 14px;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;white-space:nowrap;border:2px solid transparent}
 .chip-item:hover{transform:translateY(-2px)}
@@ -100,15 +100,27 @@ header{background:var(--header-bg);border-bottom:1px solid var(--border);transit
 .chip-item.chip-old{background:var(--chip-bg);color:var(--chip-t);border-color:var(--border)}
 .chip-item.chip-old:hover{border-color:var(--orange);color:var(--orange)}
 
+/* Sidebar desktop — bolitas en rejilla fluido */
+.sidebar-grid{display:flex;flex-wrap:wrap;gap:6px;padding:2px 0;align-content:flex-start}
+.ball-item{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;cursor:pointer;transition:all .2s;border:2px solid transparent;flex-shrink:0;line-height:1}
+.ball-item.ball-latest{background:var(--orange);color:#fff;box-shadow:0 4px 14px rgba(245,158,66,.45);width:52px;height:52px;font-size:17px}
+.ball-item.ball-old{background:var(--chip-bg);color:var(--chip-t);border-color:var(--border)}
+.ball-item.ball-old:hover{border-color:var(--orange);color:var(--orange);transform:scale(1.1)}
+/* Vocab: palabras en rejilla 2 columnas */
+.ball-item.ball-word{border-radius:8px;width:auto;height:auto;padding:5px 8px;font-size:12px;min-width:44px;white-space:nowrap;max-width:120px;overflow:hidden;text-overflow:ellipsis}
+.ball-item.ball-word.ball-latest{border-radius:10px;width:auto;height:auto;padding:6px 10px;font-size:13px;max-width:130px}
+/* Contador de llamados en sidebar */
+#sidebarCount{font-size:11px;font-weight:700;color:var(--text3);text-align:right;margin-bottom:6px;letter-spacing:.5px}
+
 /* Tablet landscape layout (G) */
 @media(min-width:1024px) and (orientation:landscape){
-  #bingoMain{display:grid;grid-template-columns:1fr 300px;gap:0;height:calc(100vh - 60px - 0px)}
+  #bingoMain{display:grid;grid-template-columns:1fr 280px;gap:0;height:calc(100vh - 60px - 0px)}
   #bingoCenter{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px}
-  #bingoSidebar{border-left:1px solid var(--border);display:flex;flex-direction:column;padding:16px;gap:10px;overflow-y:auto;background:var(--surface2)}
+  #bingoSidebar{border-left:1px solid var(--border);display:flex;flex-direction:column;padding:14px;gap:6px;overflow-y:auto;overflow-x:hidden;background:var(--surface2);min-height:0}
   #sidebarTitle{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--text3)}
   #bingoFooter{display:none}
-  #hChips{flex-direction:column;overflow-x:visible;overflow-y:auto;max-height:100%;padding:0;gap:6px}
-  .chip-item{width:100%;text-align:left}
+  #hChips{flex-direction:row;flex-wrap:wrap;overflow-x:visible;overflow-y:auto;max-height:100%;padding:0;gap:6px;align-content:flex-start}
+  .chip-item{width:auto;text-align:center}
 }
 @media not ((min-width:1024px) and (orientation:landscape)){
   #bingoSidebar{display:none}
@@ -192,14 +204,17 @@ header{background:var(--header-bg);border-bottom:1px solid var(--border);transit
         <button onclick="triggerBingo()" class="btn-outline px-8 py-4 rounded-xl text-lg font-extrabold tracking-widest">BINGO!</button>
       </div>
     </section>
-    <!-- Sidebar tablet (G): contiene el mismo #hChips que el footer en móvil -->
+    <!-- Sidebar desktop (G): bolitas en rejilla -->
     <aside id="bingoSidebar">
-      <div id="sidebarTitle">Historial</div>
-      <div id="hChips" class="chips-scroll"><span class="text-xs py-1" style="color:var(--hist-e)" data-i18n="noNumbers">No numbers called yet</span></div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+        <div id="sidebarTitle">Historial</div>
+        <div id="sidebarCount"></div>
+      </div>
+      <div id="hChips" class="sidebar-grid"></div>
     </aside>
   </div>
   <footer id="bingoFooter" class="px-4 py-2.5 flex-shrink-0 border-t" style="background:var(--footer-bg);border-color:var(--border)">
-    <div class="chips-scroll" id="hChipsMobile"><span class="text-xs py-1" style="color:var(--hist-e)" data-i18n="noNumbers">No numbers called yet</span></div>
+    <div class="chips-scroll" id="hChipsMobile"></div>
   </footer>
 </div>
 
@@ -532,6 +547,7 @@ function initGame(){
   const emptyMsg='<span class="text-xs py-1" style="color:var(--hist-e)">'+t('noNumbers')+'</span>';
   const sc=$('hChips'),fc=$('hChipsMobile');
   if(sc)sc.innerHTML=emptyMsg;if(fc)fc.innerHTML=emptyMsg;
+  const cnt=$('sidebarCount');if(cnt)cnt.textContent='';
   $('hGrid') && ($('hGrid').innerHTML='');
   updateProgressRing(0,totalNumbers);
   upUI();
@@ -542,14 +558,40 @@ function upUI(){
   $('nextBtn').disabled=remaining.length===0||spinning;
   const list=vocabActive?vocabCalled:called;
   updateProgressRing(list.length,totalNumbers);
-  // Chips — actualiza sidebar (desktop) y footer (móvil) con el mismo contenido
   const emptyHtml='<span class="text-xs py-1" style="color:var(--hist-e)">'+(vocabActive?t('noWords'):t('noNumbers'))+'</span>';
-  const chipsHtml=!list.length?emptyHtml:rev.map((item,i)=>`<button onclick="rpItem(${list.length-1-i})" class="chip-item ${i===0?'chip-latest':'chip-old'}">${item}</button>`).join('');
-  const sidebarChips=$('hChips');
-  const footerChips=$('hChipsMobile');
-  if(sidebarChips)sidebarChips.innerHTML=chipsHtml;
-  if(footerChips)footerChips.innerHTML=chipsHtml;
-  if(list.length){setTimeout(()=>{if(sidebarChips)sidebarChips.scrollTop=0;if(footerChips)footerChips.scrollLeft=0;},30);}
+  const rev=list.slice().reverse();
+
+  // --- SIDEBAR DESKTOP: bolitas en rejilla (varias por fila) ---
+  const sidebarEl=$('hChips');
+  const countEl=$('sidebarCount');
+  if(sidebarEl){
+    if(!list.length){
+      sidebarEl.innerHTML=emptyHtml;
+      if(countEl)countEl.textContent='';
+    } else {
+      const isWord=vocabActive;
+      sidebarEl.innerHTML=rev.map((item,i)=>{
+        const idx=list.length-1-i;
+        const wordCls=isWord?' ball-word':'';
+        const stateCls=i===0?'ball-latest':'ball-old';
+        return `<button onclick="rpItem(${idx})" class="ball-item${wordCls} ${stateCls}" title="${item}">${item}</button>`;
+      }).join('');
+      if(countEl)countEl.textContent=list.length+' / '+totalNumbers;
+    }
+    setTimeout(()=>{sidebarEl.scrollTop=0;},30);
+  }
+
+  // --- FOOTER MÓVIL: chips horizontales, el más reciente a la IZQUIERDA ---
+  const footerEl=$('hChipsMobile');
+  if(footerEl){
+    if(!list.length){
+      footerEl.innerHTML=emptyHtml;
+    } else {
+      // rev[0] = más reciente → queda a la izquierda del scroll
+      footerEl.innerHTML=rev.map((item,i)=>`<button onclick="rpItem(${list.length-1-i})" class="chip-item ${i===0?'chip-latest':'chip-old'}">${item}</button>`).join('');
+    }
+    setTimeout(()=>{footerEl.scrollLeft=0;},30);
+  }
 }
 
 function nextNumber(){
