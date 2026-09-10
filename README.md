@@ -1,2 +1,2 @@
 # Bingo
-App para jugar al bingo y ruleta. Generar cartones PDF
+Kit de herramientas digitales para el área de Inglés 
