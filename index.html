@@ -376,7 +376,7 @@ html[data-theme="dark"] .qface.back{color:#0B1220}
 .prev{display:inline-block;padding:12px;border-radius:var(--r-m);border:1.5px dashed var(--line-strong);background:var(--surface2)}
 .prev .pt{font-size:10px;font-weight:700;color:var(--ink3);text-align:center;margin-bottom:6px}
 .prev .pg{display:grid;gap:3px}
-.prev .pc{aspect-ratio:1.45;display:grid;place-items:center;border:1.5px solid var(--line-strong);border-radius:3px;background:var(--surface);
+.prev .pc{aspect-ratio:var(--pcAspect,1.45);display:grid;place-items:center;border:1.5px solid var(--line-strong);border-radius:3px;background:var(--surface);
   font-family:var(--font-dis);font-weight:600;font-size:12px;padding:2px;text-align:center;line-height:1.05;overflow:hidden}
 .prev .pc.s2{font-size:9px}.prev .pc.s3{font-size:7px;letter-spacing:-.2px}
 
@@ -745,6 +745,13 @@ html[data-theme="dark"] .qface.back{color:#0B1220}
           </div>
           <div class="field"><label data-i18n="cardTitle">Title printed on the card</label><input type="text" id="cardTitle" placeholder="Animals bingo" data-i18n-ph="cardTitlePh"></div>
           <div class="field"><label data-i18n="howMany">How many cards</label><input type="number" id="cardCount" min="1" max="120" value="25"></div>
+          <div class="field"><label data-i18n="perSheet">Cards per A4 sheet</label>
+            <select id="cardPerSheet">
+              <option value="0" data-i18n="autoFit">Automatic</option>
+              <option value="1">1</option><option value="2">2</option><option value="4">4</option>
+              <option value="6">6</option><option value="8">8</option><option value="9">9</option>
+            </select>
+            <p class="help" id="cardSheetInfo"></p></div>
           <div class="row-between"><label data-i18n="withLogo">Print the school logo</label><label class="sw"><input type="checkbox" id="cardLogo" checked><i></i></label></div>
         </div>
       </div>
@@ -1102,7 +1109,11 @@ frameLabel:"Sentence frame",frameHelp:"Use ___ where students put their own word
 newQuestionT:"New question",editQuestionT:"Edit question",addQ:"Add question",
 needQA:"Write a question and an answer",pickAtLeastOne:"Turn on at least one question",
 wordsNeeded:(n,h)=>`${n} cells per card, only ${h} available. Some will repeat on the same card.`,
-cellsOk:(n,h)=>`${n} cells per card · ${h} available`,popupBlocked:"Your browser blocked the print window. Allow pop-ups and try again.",
+cellsOk:(n,h)=>`${n} cells per card · ${h} available`,
+perSheet:"Cards per A4 sheet",autoFit:"Automatic (as many as stay readable)",
+sheetPlan:(per,sheets,cw,ch)=>`${per} per sheet · ${sheets} sheet${sheets===1?"":"s"} · cells ${cw}×${ch} mm`,
+tinyCells:"Those cells will print very small. Fewer cards per sheet, or a smaller grid, would read better.",
+cellsTight:(n,h)=>`${n} cells per card and exactly ${h} available, so every card will hold the same values in a different order. Widen the range for cards that really differ.`,popupBlocked:"Your browser blocked the print window. Allow pop-ups and try again.",
 winnerIs:"The winner is",spinning:"Spinning…",noRepeats:"Everyone has had a turn.",
 voiceTest:"Hello! This is how the numbers and words will sound.",
 autoOn:s=>`Calling every ${s} seconds`,autoOff:"Automatic calling stopped"
@@ -1172,7 +1183,11 @@ frameLabel:"Estructura",frameHelp:"Usa ___ donde el alumnado pone sus propias pa
 newQuestionT:"Nueva pregunta",editQuestionT:"Editar pregunta",addQ:"Añadir pregunta",
 needQA:"Escribe una pregunta y una respuesta",pickAtLeastOne:"Activa al menos una pregunta",
 wordsNeeded:(n,h)=>`${n} casillas por cartón y solo ${h} disponibles. Algunas se repetirán en el mismo cartón.`,
-cellsOk:(n,h)=>`${n} casillas por cartón · ${h} disponibles`,popupBlocked:"El navegador ha bloqueado la ventana de impresión. Permite las ventanas emergentes.",
+cellsOk:(n,h)=>`${n} casillas por cartón · ${h} disponibles`,
+perSheet:"Cartones por hoja A4",autoFit:"Automático (los que quepan legibles)",
+sheetPlan:(per,sheets,cw,ch)=>`${per} por hoja · ${sheets} hoja${sheets===1?"":"s"} · casillas de ${cw}×${ch} mm`,
+tinyCells:"Esas casillas saldrán muy pequeñas. Con menos cartones por hoja, o una cuadrícula menor, se leerán mejor.",
+cellsTight:(n,h)=>`${n} casillas por cartón y justo ${h} disponibles, así que todos los cartones llevarán los mismos valores en distinto orden. Amplía el rango para que los cartones sean realmente distintos.`,popupBlocked:"El navegador ha bloqueado la ventana de impresión. Permite las ventanas emergentes.",
 winnerIs:"Le toca a",spinning:"Girando…",noRepeats:"Ya han salido todos.",
 voiceTest:"Hello! This is how the numbers and words will sound.",
 autoOn:s=>`Cantando cada ${s} segundos`,autoOff:"Modo automático detenido"
@@ -1188,7 +1203,7 @@ const DEF_STATE={
   vocab:{words:[],name:"",dbl:false,lis:false,del:5,auto:0},
   questions:{year:4,mode:"qa",view:"focus",frame:true,speak:true,items:[],name:""},
   picker:{items:[],remove:false,speak:true},
-  cards:{src:"num",min:1,max:75,rows:3,cols:4,title:"",count:25,logo:true}
+  cards:{src:"num",min:1,max:75,rows:3,cols:4,title:"",count:25,logo:true,perSheet:0}
 };
 const DEF_LIB={vocab:[],questions:[],picker:[]};
 let CFG={...DEF_CFG}, ST=clone(DEF_STATE), LIB=clone(DEF_LIB);
@@ -1248,7 +1263,7 @@ function confirmBox(title,desc,confirmLabel,fn){
 }
 
 /* ===================== AUDIO + SPEECH ===================== */
-let actx=null,audioReady=false,voices=[],chosenVoice=null;
+let actx=null,audioReady=false,voices=[],chosenVoice=null,speakT=null;
 function unlockAudio(){
   if(audioReady)return;
   try{
@@ -1300,10 +1315,12 @@ function pickVoice(){
 }
 /* Chrome drops an utterance queued in the same tick as cancel(); wait a frame. */
 function speak(text,onEnd){
+  if(speakT){clearTimeout(speakT);speakT=null;}
   if(!("speechSynthesis" in window)){if(onEnd)onEnd();return;}
   try{speechSynthesis.cancel();}catch(e){}
-  if(CFG.mute||!text){if(onEnd)setTimeout(onEnd,10);return;}
-  setTimeout(()=>{
+  if(CFG.mute||!text){if(onEnd)speakT=setTimeout(()=>{speakT=null;onEnd();},10);return;}
+  speakT=setTimeout(()=>{
+    speakT=null;
     const u=new SpeechSynthesisUtterance(text);
     u.lang=CFG.accent;u.rate=CFG.speed;u.pitch=1;
     if(chosenVoice)u.voice=chosenVoice;
@@ -1311,7 +1328,9 @@ function speak(text,onEnd){
     try{if(speechSynthesis.paused)speechSynthesis.resume();speechSynthesis.speak(u);}catch(e){if(onEnd)onEnd();}
   },70);
 }
-const stopSpeech=()=>{try{speechSynthesis.cancel();}catch(e){}};
+/* Also drops an utterance still waiting in that 70 ms queue, so leaving a screen
+   cannot produce speech a moment later. */
+const stopSpeech=()=>{if(speakT){clearTimeout(speakT);speakT=null;}try{speechSynthesis.cancel();}catch(e){}};
 const ONES=["","one","two","three","four","five","six","seven","eight","nine","ten","eleven","twelve","thirteen","fourteen","fifteen","sixteen","seventeen","eighteen","nineteen"];
 const TENS=["","","twenty","thirty","forty","fifty","sixty","seventy","eighty","ninety"];
 function numberToWords(n){
@@ -1509,7 +1528,7 @@ function addVocabWords(list,replace){
 /* =========================================================================
    BINGO ENGINE (shared by numbers and vocabulary)
    ========================================================================= */
-const B={mode:"numbers",pool:[],called:[],total:0,current:null,busy:false,autoT:null,revealT:null,raf:null};
+const B={mode:"numbers",pool:[],called:[],total:0,current:null,busy:false,autoT:null,revealT:null,guardT:null,raf:null};
 const opts=()=>B.mode==="numbers"?ST.numbers:ST.vocab;
 
 function bingoStart(mode){
@@ -1600,13 +1619,24 @@ function bingoNext(){
       $("#callSay").textContent="? ? ?";$("#callSay").className="mut";
       $("#callDots").classList.remove("hide");
       B.current=value;$("#repeatBtn").disabled=false;
-      sayCall(value,()=>{
-        B.revealT=setTimeout(()=>{
-          $("#callDots").classList.add("hide");
-          showCall(value);fxLand();
-          finishTurn();
-        },(o.del||5)*1000);
-      });
+      let settled=false;
+      const reveal=()=>{
+        if(settled)return;settled=true;
+        B.revealT=null;
+        if(B.guardT){clearTimeout(B.guardT);B.guardT=null;}
+        $("#callDots").classList.add("hide");
+        showCall(value);fxLand();finishTurn();
+      };
+      const countdown=()=>{
+        if(settled||B.revealT)return;
+        if(B.guardT){clearTimeout(B.guardT);B.guardT=null;}
+        B.revealT=setTimeout(reveal,(o.del||5)*1000);
+      };
+      sayCall(value,countdown);
+      /* The voice may never report back: no voices loaded yet on a Chromebook,
+         Chrome silently dropping the utterance, or the tab losing focus. Start the
+         countdown anyway so a turn can never stall with the value hidden. */
+      B.guardT=setTimeout(countdown,4000);
     }else{
       showCall(value);fxLand();sayCall(value);finishTurn();
     }
@@ -1646,6 +1676,7 @@ function startAuto(){
 function stopAuto(){if(B.autoT){clearInterval(B.autoT);B.autoT=null;const el=$("#autoBtn");if(el)el.querySelector("span").textContent=t("autoStart");}}
 function stopBingoTimers(){
   if(B.revealT){clearTimeout(B.revealT);B.revealT=null;}
+  if(B.guardT){clearTimeout(B.guardT);B.guardT=null;}
   if(B.raf){cancelAnimationFrame(B.raf);B.raf=null;}
   B.busy=false;
   const dots=$("#callDots");if(dots)dots.classList.add("hide");
@@ -1970,71 +2001,154 @@ function renderCardsSetup(){
   $("#cardSourceInfo").textContent=c.src==="num"
     ? t("readyNumbers",Math.max(0,have))
     : (ST.vocab.words.length?t("wordCount",ST.vocab.words.length):t("noWordsYet"));
-  $("#cardInfo").textContent=have>=cells?t("cellsOk",cells,have):t("wordsNeeded",cells,have);
+  $("#cardInfo").textContent=have<cells?t("wordsNeeded",cells,have)
+    :have===cells?t("cellsTight",cells,have):t("cellsOk",cells,have);
+  $("#cardPerSheet").value=String(c.perSheet||0);
+  const P=sheetPlan(), sheets=Math.ceil(c.count/P.per);
+  const tiny=P.cellW<13||P.cellH<8;
+  $("#cardSheetInfo").textContent=t("sheetPlan",P.per,sheets,P.cellW.toFixed(0),P.cellH.toFixed(0))
+    +(tiny?" — "+t("tinyCells"):"");
+  $("#cardSheetInfo").style.color=tiny?"var(--warn)":"";
   renderCardPreview();
-  $("#launchMeta").innerHTML=`<b>${esc(t("cardsMeta",c.rows,c.cols,c.count))}</b>`;
+  $("#launchMeta").innerHTML=`<b>${esc(t("cardsMeta",c.rows,c.cols,c.count))}</b> · ${esc(t("sheetPlan",P.per,sheets,P.cellW.toFixed(0),P.cellH.toFixed(0)))}`;
   $("#launchBtn").disabled=have<1;
 }
 function readCardsSetup(){
   const c=ST.cards;
-  c.rows=Math.max(2,Math.min(8,parseInt($("#cardRows").value,10)||3));
-  c.cols=Math.max(2,Math.min(8,parseInt($("#cardCols").value,10)||4));
-  c.min=Math.max(0,Math.min(998,parseInt($("#cardMin").value,10)||1));
-  c.max=Math.max(c.min+1,Math.min(999,parseInt($("#cardMax").value,10)||75));
-  c.count=Math.max(1,Math.min(120,parseInt($("#cardCount").value,10)||25));
+  const num=(sel,def)=>{const v=parseInt($(sel).value,10);return isNaN(v)?def:v;};
+  c.rows=Math.max(2,Math.min(8,num("#cardRows",3)));
+  c.cols=Math.max(2,Math.min(8,num("#cardCols",4)));
+  c.min=Math.max(0,Math.min(998,num("#cardMin",1)));
+  c.max=Math.max(c.min+1,Math.min(999,num("#cardMax",75)));
+  c.count=Math.max(1,Math.min(120,num("#cardCount",25)));
+  c.perSheet=num("#cardPerSheet",0);
   c.title=$("#cardTitle").value;c.logo=$("#cardLogo").checked;
   saveState();renderCardsSetup();
 }
+function cardSource(){
+  const c=ST.cards;
+  const src=c.src==="num"
+    ? Array.from({length:c.max-c.min+1},(_,i)=>c.min+i)
+    : [...ST.vocab.words];
+  return src.length?src:null;
+}
+/* One independent draw per card. Each card samples the WHOLE source again, so two
+   cards may share some values by chance but are never the same set reshuffled. */
+function drawCard(src,cells){
+  const out=shuffled(src).slice(0,cells);
+  // Source smaller than the grid: top up with fresh passes instead of a fixed tail.
+  while(out.length<cells)out.push(...shuffled(src).slice(0,cells-out.length));
+  return out;
+}
 function cardPool(){
-  const c=ST.cards, cells=c.rows*c.cols;
-  let src=c.src==="num"?Array.from({length:c.max-c.min+1},(_,i)=>c.min+i):[...ST.vocab.words];
-  if(!src.length)return null;
-  const out=[...src];
-  while(out.length<cells)out.push(src[out.length%src.length]);
-  return shuffled(out).slice(0,cells);
+  const src=cardSource();
+  if(!src)return null;
+  return drawCard(src,ST.cards.rows*ST.cards.cols);
 }
 function renderCardPreview(){
   const c=ST.cards, pool=cardPool();
   const box=$("#cardPreview");
   if(!pool){box.innerHTML=`<div class="empty">${esc(t("noWordsYet"))}</div>`;return;}
   const size=c.cols>=6?"s3":c.cols>=5?"s2":"";
+  const P=sheetPlan();
   box.innerHTML=`<div class="prev" style="width:min(100%,${Math.min(420,c.cols*78)}px)">
     <div class="pt">${esc(c.title||"Bingo")}</div>
-    <div class="pg" style="grid-template-columns:repeat(${c.cols},1fr)">
+    <div class="pg" style="grid-template-columns:repeat(${c.cols},1fr);--pcAspect:${(P.cellW/P.cellH).toFixed(3)}">
       ${pool.map(v=>{const l=String(v).length;const cls=l>10?"s3":l>7?"s2":size;
         return `<div class="pc ${cls}">${esc(v)}</div>`;}).join("")}
     </div></div>`;
 }
-function cardsHTML(){
-  const c=ST.cards, cells=c.rows*c.cols, base=cardPool();
-  if(!base)return null;
-  const title=esc(c.title||"Bingo");
-  const perPage=cells>20?2:4;
-  const font=Math.max(7,Math.min(18,150/Math.max(c.rows,c.cols)));
-  const logo=c.logo?`<img class="lg" src="https://raw.githubusercontent.com/ManuelVS8/Bingo/refs/heads/main/Bingo.png" alt="">`:"";
-  let cards="";
-  for(let n=0;n<c.count;n++){
-    const vals=shuffled(base);
-    cards+=`<section class="card"><header>${logo}<h1>${title}</h1><span>#${n+1}</span></header><div class="grid">`
-      +vals.map(v=>{const l=String(v).length;
-        const fs=l>12?font*.55:l>8?font*.72:l>5?font*.86:font;
-        return `<div style="font-size:${fs.toFixed(1)}px">${esc(v)}</div>`;}).join("")
-      +`</div></section>`;
+/* --- A4 geometry, in millimetres, inside a 10 mm print margin.
+   A little smaller than the true 190x277 printable box so rounding in the
+   print engine can never push a page onto a second sheet. --- */
+const A4={w:188,h:272,gap:6,pad:4,head:9,cgap:1.2};
+
+/* Works out the page layout: how many cards fit across and down, and how big
+   every box ends up. Nothing here depends on the browser guessing where to
+   break, which is what used to split cards across sheets. */
+function sheetPlan(){
+  const c=ST.cards, rows=c.rows, cols=c.cols;
+  const geom=(across,down)=>{
+    const cardW=(A4.w-A4.gap*(across-1))/across;
+    const cardH=(A4.h-A4.gap*(down-1))/down;
+    const gridW=cardW-A4.pad*2;
+    const gridH=cardH-A4.pad*2-A4.head;
+    return {across,down,per:across*down,cardW,cardH,gridW,gridH,
+      cellW:(gridW-A4.cgap*(cols-1))/cols,
+      cellH:(gridH-A4.cgap*(rows-1))/rows};
+  };
+  const map={1:[1,1],2:[1,2],4:[2,2],6:[2,3],8:[2,4],9:[3,3]};
+  if(c.perSheet&&map[c.perSheet])return geom(...map[c.perSheet]);
+  // Automatic: densest layout whose cells still print readably.
+  const minW=c.src==="words"?20:16, minH=11;
+  let best=null;
+  for(let a=1;a<=3;a++)for(let d=1;d<=6;d++){
+    const g=geom(a,d);
+    if(g.cellW<minW||g.cellH<minH)continue;
+    if(!best||g.per>best.per)best=g;
   }
+  // Nothing readable fits (a very large grid): one card filling the whole sheet
+  // is still the right answer — it just can't be bigger than a page.
+  return best||geom(1,1);
+}
+function cardsHTML(){
+  const c=ST.cards, cells=c.rows*c.cols, src=cardSource();
+  if(!src)return null;
+  const P=sheetPlan();
+  const title=esc(c.title||"Bingo");
+  const logo=c.logo?`<img class="lg" src="https://raw.githubusercontent.com/ManuelVS8/Bingo/refs/heads/main/Bingo.png" alt="">`:"";
+  const base=Math.max(5,Math.min(20,P.cellH*2.83*0.44));
+  // Only worth chasing uniqueness when the source is bigger than the grid; if it is
+  // the same size, every card is necessarily the same set in a different order.
+  const canDiffer=src.length>cells, seen=new Set();
+  const cards=[];
+  for(let n=0;n<c.count;n++){
+    let vals=drawCard(src,cells);
+    if(canDiffer){
+      for(let tries=0;tries<25&&seen.has([...vals].sort().join("\u0000"));tries++)vals=drawCard(src,cells);
+      seen.add([...vals].sort().join("\u0000"));
+    }
+    cards.push(`<section class="card"><header>${logo}<h1>${title}</h1><span>#${n+1}</span></header><div class="grid">`
+      +vals.map(v=>{const l=String(v).length;
+        const fs=l>12?base*.5:l>8?base*.66:l>5?base*.82:base;
+        return `<div style="font-size:${fs.toFixed(1)}pt">${esc(v)}</div>`;}).join("")
+      +`</div></section>`);
+  }
+  let pages="";
+  for(let i=0;i<cards.length;i+=P.per)
+    pages+=`<div class="page">${cards.slice(i,i+P.per).join("")}</div>`;
   return `<!DOCTYPE html><html><head><meta charset="utf-8"><title>${title}</title><style>
     @page{size:A4;margin:10mm}
     *{box-sizing:border-box;margin:0;padding:0}
+    html,body{margin:0;padding:0}
     body{font-family:'Space Grotesk',Arial,Helvetica,sans-serif;color:#111;background:#fff}
-    .sheet{display:grid;grid-template-columns:repeat(${perPage===4?2:1},1fr);gap:8mm}
-    .card{border:1.6px dashed #94a3b8;border-radius:8px;padding:5mm;page-break-inside:avoid;break-inside:avoid}
-    .card header{display:flex;align-items:center;gap:6px;margin-bottom:3mm}
-    .card .lg{height:22px;opacity:.85}
-    .card h1{font-size:13px;font-weight:700;flex:1;letter-spacing:-.2px}
-    .card header span{font-size:10px;color:#64748b}
-    .grid{display:grid;grid-template-columns:repeat(${c.cols},1fr);gap:1.5mm}
-    .grid div{aspect-ratio:1.4;border:1.6px solid #0f172a;border-radius:3px;display:flex;align-items:center;
-      justify-content:center;text-align:center;font-weight:600;padding:1mm;line-height:1.05;overflow:hidden;word-break:break-word}
-  </style></head><body><div class="sheet">${cards}</div></body></html>`;
+    /* Each sheet is one fixed box the size of the printable area, followed by a
+       forced break. A card is sized to its slot, so it cannot spill onto the
+       next sheet and cannot be cut in half. */
+    .page{width:${A4.w}mm;height:${A4.h}mm;overflow:hidden;
+      display:grid;
+      grid-template-columns:repeat(${P.across},${P.cardW.toFixed(2)}mm);
+      grid-template-rows:repeat(${P.down},${P.cardH.toFixed(2)}mm);
+      gap:${A4.gap}mm;align-content:start;justify-content:start;
+      page-break-after:always;break-after:page}
+    .page:last-child{page-break-after:auto;break-after:auto}
+    .card{width:${P.cardW.toFixed(2)}mm;height:${P.cardH.toFixed(2)}mm;overflow:hidden;
+      border:1.4px dashed #94a3b8;border-radius:2mm;padding:${A4.pad}mm;
+      display:flex;flex-direction:column;
+      page-break-inside:avoid;break-inside:avoid}
+    .card header{height:${A4.head}mm;flex:none;display:flex;align-items:center;gap:2mm}
+    .card .lg{height:${(A4.head*0.72).toFixed(1)}mm;opacity:.85}
+    .card h1{font-size:9pt;font-weight:700;flex:1;letter-spacing:-.2px;
+      white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .card header span{font-size:7pt;color:#64748b;flex:none}
+    .grid{flex:1;min-height:0;display:grid;
+      grid-template-columns:repeat(${c.cols},1fr);
+      grid-template-rows:repeat(${c.rows},1fr);
+      gap:${A4.cgap}mm}
+    .grid div{border:1.4px solid #0f172a;border-radius:1mm;display:flex;align-items:center;
+      justify-content:center;text-align:center;font-weight:600;padding:.5mm;
+      line-height:1.05;overflow:hidden;word-break:break-word}
+  </style></head><body>${pages}</body></html>`;
 }
 /* Printing through a hidden iframe avoids the pop-up blocker that window.open hits. */
 function printCards(){
@@ -2045,7 +2159,7 @@ function printCards(){
   frame.style.cssText="position:fixed;right:0;bottom:0;width:0;height:0;border:0;visibility:hidden";
   document.body.appendChild(frame);
   let done=false;
-  frame.onload=()=>{
+  const fire=()=>{
     if(done)return;done=true;
     setTimeout(()=>{
       try{frame.contentWindow.focus();frame.contentWindow.print();}
@@ -2057,6 +2171,9 @@ function printCards(){
       setTimeout(()=>frame.remove(),40000);
     },350);
   };
+  frame.onload=fire;
+  /* Some browsers never fire load for srcdoc; don't leave the button doing nothing. */
+  setTimeout(fire,2500);
   frame.srcdoc=html;
 }
 
@@ -2264,7 +2381,7 @@ function wire(){
   on("#cardWordAddBtn","click",()=>addWordFromInput("#cardWordAddInput",renderCardsSetup));
   on("#cardWordAddInput","keydown",e=>{if(e.key==="Enter"){e.preventDefault();addWordFromInput("#cardWordAddInput",renderCardsSetup);}});
   on("#cardWordsClear","click",()=>{ST.vocab.words=[];ST.vocab.name="";saveState();renderCardsSetup();});
-  ["#cardMin","#cardMax","#cardRows","#cardCols","#cardCount","#cardTitle","#cardLogo"].forEach(s=>on(s,"change",readCardsSetup));
+  ["#cardMin","#cardMax","#cardRows","#cardCols","#cardCount","#cardTitle","#cardLogo","#cardPerSheet"].forEach(s=>on(s,"change",readCardsSetup));
   on("#cardShuffle","click",renderCardPreview);
 
   /* --- bingo play --- */
